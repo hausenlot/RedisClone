@@ -4,7 +4,7 @@ This is for AGS Platforms Final assessment that last for 120 Hours Spanning in 1
 ## **Introduction**
 The objective is Quoting them:  
 
-*"The goal is to create a **simple** key-value store that supports various data structures and core features similar to Redis"*
+*"The goal is to create a key-value store that supports various data structures and core features similar to Redis"*
 
 ## **Full Specification of the Task**
 **PS:** *Quoted specification are the things I did not finish*
@@ -139,7 +139,7 @@ The objective is Quoting them:
 >    - Compare implementation with Redis for similar operations
 
 17. **Keyspace Functionality**
-     - Add support for key expiration and TTL commands (EXPIRE, TTL, PERSIST)
+     - Add support for key expiration and TTL commands (EXPIRE, TTL, ~~PERSIST~~)
 >    - Design logical database structure using Redis keyspaces
 >    - Implement commands for keyspace management (SELECT, FLUSHDB, RANDOMKEY)
 

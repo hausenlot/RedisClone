@@ -1,0 +1,20 @@
+{
+  "name": "redis-clone",
+  "version": "1.0.0",
+  "main": "redis-clone.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "fengari": "^0.1.4",
+    "fengari-web": "^0.1.4",
+    "jsonpath": "^1.1.1"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0"
+  }
+}
