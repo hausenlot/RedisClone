@@ -157,7 +157,7 @@ class RedisCloneServer {
 
   // Parse raw command string into command and arguments
   parseCommand(rawCommand) {
-    // console.log(rawCommand)
+    console.log(`Command to be process by ${this.mode}:`, rawCommand)
     // Split command, handling quoted strings and spaces
     // If the rawCommand is like a json make sure that the value doesn't have white spaces outside of double quotes or else the match regex will seperate them
     if (!rawCommand || !rawCommand.trim()) {
@@ -168,6 +168,13 @@ class RedisCloneServer {
     }
   
     const parts = rawCommand.match(/(?:[^\s"]+|"[^"]*")+/g) || [];
+
+    // i MOVED IT HERE FOR QUICK FIXES FOR SLAVES MIGHT BE SOME ISSUES
+    // If we're in master mode and the command is neither GET nor SYNC, broadcast to slaves
+    if (this.mode === 'master' && parts[0]?.toUpperCase() !== 'GET' && parts[0]?.toUpperCase() !== 'SYNC') {
+      this.broadcastToSlaves(rawCommand);
+    }
+    
     return {
       command: parts[0]?.toUpperCase(),
       args: parts.slice(1).map(arg => 
@@ -192,10 +199,10 @@ class RedisCloneServer {
 
       let result;
       const fullCommand = `${command} ${args.join(' ')}`;
-      // Broadcast the command and its argument to the slaves
-      if (this.mode === 'master' && command !== 'GET' && command !== 'SYNC') {
-        this.broadcastToSlaves(`${command} ${args.join(' ')}`);
-      }
+      // // Broadcast the command and its argument to the slaves
+      // if (this.mode === 'master' && command !== 'GET' && command !== 'SYNC') {
+      //   this.broadcastToSlaves(fullCommand);
+      // }
 
       if (this.redis.transactionMode && command !== "EXEC" && command !== "DISCARD") {
         this.redis.commandQueue.push({ command, args }); // Queue the command and its arguments
@@ -215,7 +222,6 @@ class RedisCloneServer {
           } else if (args[2] === 'PX') {
             options.px = parseInt(args[3]);
           }
-
           result = this.redis.set(args[0], args[1], options);
 
           if (this.mode === 'master') {
@@ -553,7 +559,12 @@ class RedisCloneServer {
           result = this.redis.xadd(args[0], args[1], ...args.slice(2)) 
           if (this.mode === 'master') {
             // For AOF persistence, we need to store the command exactly as received
-            this.persistenceManager.appendToAOF(fullCommand);
+            const modifiedCommand = fullCommand.replace('* ', `${result} `)
+            console.log("Original command:", fullCommand)  // XADD testStream * field2 value2
+            console.log("Modified command:", modifiedCommand)  // XADD testStream 1736783906760-1 field2 value2
+            this.persistenceManager.appendToAOF(modifiedCommand);
+            // I need to replace * in fullcommand with result
+            // this.persistenceManager.appendToAOF(fullCommand);
           }
           return result
         case 'XLEN':
@@ -676,7 +687,9 @@ class RedisCloneServer {
             socket.write(`subscribe ${channel} ${count}\n`);
           });
           break;
-        }
+        };
+        case 'PING':
+          return 'PONGER'
       default:
         return `ERR unknown command '${command}'`;
       }
@@ -828,6 +841,7 @@ class RedisCloneServer {
 
   broadcastToSlaves(command) {
     this.slaves.forEach((slave) => {
+      console.log("Passing this command to the slaves: ", command)
       slave.write(command + '\n');
     });
   }

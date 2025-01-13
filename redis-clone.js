@@ -421,7 +421,7 @@ class RedisClone {
   /* DATE TYPES*/
   // STRINGS
   set(key, value, options = {}) {
-    console.log("Set Parameters: ", key, value, options = {})
+    console.log("Set Parameters: ", key, value, options)
     this.storage.set(key, value);
 
     // Handle expiration if provided ** I dont' have PX in persistence as of now so yea
@@ -1175,7 +1175,7 @@ class RedisClone {
       return index === -1 ? null : `${index}, ${score}`;
     } 
 
-    return index === -1 ? null : index;
+    return index === -1 ? null : index + 1;
   }
   zrangebyscore(key, min, max, withScores = false) {
     console.log("ZRANGEBYSCORE parameters: ", key, min, max, withScores)
@@ -1340,8 +1340,10 @@ class RedisClone {
       throw new Error('ERR stream does not exist');
     }
 
+    // This sht is buggy af
     // If the a key does not exist then make one
-    if (!this.consumerGroups.has(key)) {
+    console.log("Current consumer group:", this.consumerGroups)
+    if (!this.consumerGroups.has(key) || !(this.consumerGroups.get(key) instanceof Map)) {
       console.log("I didn't saw this key in my map so I'll make one")
       this.consumerGroups.set(key, new Map()); // look like this Map(1) { 'mystream' => Map(0) {} } 
       console.log("Here is the whole map looks now: ", this.consumerGroups)

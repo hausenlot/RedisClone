@@ -1,7 +1,7 @@
 const net = require('net');
 
 class RedisCloneClient {
-  constructor(password, port = 6379, host = 'localhost') {
+  constructor(port = 6379, host = 'localhost', password) {
     this.port = port;
     this.host = host;
     this.subscriptionMode = false;
@@ -102,9 +102,10 @@ class RedisCloneClient {
 
 // If run directly, provide a CLI interface
 if (require.main === module) {
-  const password = process.argv[2]
-  const port = process.argv[3]
-  const client = new RedisCloneClient(password, port, 'localhost')
+  const port = process.argv[2]
+  const localhost = process.argv[3]
+  const password = process.argv[4]
+  const client = new RedisCloneClient(port, localhost, password)
 
   client.connect() // This is the async connect not the .connect event of net module this is an async
     .then(() => {
