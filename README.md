@@ -166,7 +166,7 @@ The objective is Quoting them:
 ## **Installation and Usage**
 1. Clone the repository: 
 ```
-git clone https://github.com/username/project-title.git
+git clone https://github.com/hausenlot/RedisClone.git
 ```
 2. Make sure you have node.js Installed, in my case it was v20.18.1. To check yours: 
 ```
@@ -174,7 +174,7 @@ node -v
 ```
 3. Go to root directory of the project:
 ```
-cd project-title
+cd RedisClone
 ```
 4. Install dependencies (jsonpath and fengari-web):
 ```
@@ -190,7 +190,7 @@ node redis-clone-server.js slave 6380 locahost 6379
 ```
 6. To run the client
 ```
-node redis-clone-client.js
+node redis-clone-client.js secret
 ```
 7. Basic Usage
 - SET with EX Options set to 1 Hour
@@ -201,4 +201,4 @@ SET testKey "This is a Sample String value in a String key" EX 3600
 ```
 GET testKey
 ```
-**I will Include the whole documentation here** 
+**I will Include the whole documentation here after my evaluation** 
