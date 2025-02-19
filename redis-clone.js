@@ -1161,7 +1161,6 @@ class RedisClone {
   zrank(key, member, withScores = false) {
     console.log("ZRANK parameters: ", key, member, withScores)
     const zset = this.get(key);
-    console.log(zset)
     if (zset === null) return null;
     if (!Array.isArray(zset)) {
       throw new Error('ERR value is not a sorted set');
@@ -1172,7 +1171,7 @@ class RedisClone {
     if (withScores) {
       const score = zset[index].score
 
-      return index === -1 ? null : `${index}, ${score}`;
+      return index === -1 ? null : `${index+1}, ${score}`;
     } 
 
     return index === -1 ? null : index + 1;
