@@ -119,8 +119,8 @@ The objective is Quoting them:
 >    - Implement efficient serialization/deserialization for document storage
 
 13. **Security**
-    - Add Support for Access Control Lists (ACL)
->    - Implement basic authentication mechanisms
+    - Implement basic authentication mechanisms
+>    - Add Support for Access Control Lists (ACL)
 
 14. **Advanced Features**
     - Add support for lua scripting for complex operations 
